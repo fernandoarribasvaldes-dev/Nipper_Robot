@@ -1,0 +1,218 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+
+using namespace std;
+
+// ===============================
+// Angle wrap [-pi, pi]
+// ===============================
+double angle_wrap(double a) {
+    return fmod(a + M_PI, 2.0 * M_PI) - M_PI;
+}
+
+// ===============================
+// Simple PID class
+// ===============================
+class PID {
+public:
+    double kp, ki, kd;
+    double i_term;
+    double prev_error;
+    double prev_time;
+    double i_limit;
+
+    PID(double kp_, double ki_, double kd_, double i_limit_)
+        : kp(kp_), ki(ki_), kd(kd_), i_term(0), prev_error(0),
+          prev_time(-1), i_limit(i_limit_) {}
+
+    double step(double error, double now) {
+        if (prev_time < 0) {
+            prev_time = now;
+            prev_error = error;
+            return 0.0;
+        }
+
+        double dt = now - prev_time;
+        if (dt <= 0) return 0.0;
+
+        prev_time = now;
+
+        double p = kp * error;
+
+        i_term += ki * error * dt;
+        if (i_limit > 0) {
+            if (i_term >  i_limit) i_term =  i_limit;
+            if (i_term < -i_limit) i_term = -i_limit;
+        }
+
+        double d = kd * (error - prev_error) / dt;
+        prev_error = error;
+
+        return p + i_term + d;
+    }
+};
+
+
+// ===============================
+// Multi-Turret Controller (NO ROS)
+// ===============================
+class MultiTurretController {
+public:
+    double dx = 0.7;
+    double dy = 0.2;
+
+    double r_wheel = 0.075;
+    double d_wheel = 0.15;
+
+    // PID controllers for 4 turrets
+    PID pid[4] = {
+        PID(10, 0, 5, 2),
+        PID(10, 0, 5, 2),
+        PID(10, 0, 5, 2),
+        PID(10, 0, 5, 2)
+    };
+
+    // A matrix (8×3) – turret velocity mapping
+    double A[8][3];
+
+    MultiTurretController() {
+        double R[4][2] = {
+            { dx, -dy },   // LF
+            { -dx, -dy },  // LR
+            { -dx,  dy },  // RR
+            { dx,   dy }   // RF
+        };
+
+        for (int i = 0; i < 4; i++) {
+            A[2*i][0] = 1;   A[2*i][1] = 0;   A[2*i][2] = R[i][1]; // vx + ω*y
+            A[2*i+1][0] = 0; A[2*i+1][1] = 1; A[2*i+1][2] = R[i][0]; // vy - ω*x
+        }
+    }
+
+    // Run kinematics + turret controller
+    void compute(
+        double vx, double vy, double omega,
+        double turret_angles[4],
+        double wheel_out[8],
+        double now_time
+    ) {
+        double V[3] = { vx, vy, omega };
+
+        // ------------------------------------------
+        // Compute turret velocities
+        // ------------------------------------------
+        double v_turret[4][2];
+        for (int i = 0; i < 4; i++) {
+            double vx_i = A[2*i][0]   * V[0] + A[2*i][1]   * V[1] + A[2*i][2]   * V[2];
+            double vy_i = A[2*i+1][0] * V[0] + A[2*i+1][1] * V[1] + A[2*i+1][2] * V[2];
+            v_turret[i][0] = vx_i;
+            v_turret[i][1] = vy_i;
+        }
+
+        // ------------------------------------------
+        // For each turret
+        // ------------------------------------------
+        int idx = 0;
+        for (int i = 0; i < 4; i++) {
+
+            double vx_i = v_turret[i][0];
+            double vy_i = v_turret[i][1];
+
+            double v_bar = sqrt(vx_i*vx_i + vy_i*vy_i);
+
+            double raw_phi = atan2(vy_i, vx_i);
+
+            double phi_des;
+            if (fabs(angle_wrap(raw_phi)) > M_PI/2) {
+                phi_des = angle_wrap(raw_phi + M_PI);
+                v_bar = -v_bar;
+            } else {
+                phi_des = raw_phi;
+            }
+
+            double phi_act = turret_angles[i];
+            double e_phi   = angle_wrap(phi_des - phi_act);
+
+            double phi_dot = pid[i].step(e_phi, now_time);
+
+            double v_left  = v_bar - 0.5 * d_wheel * phi_dot;
+            double v_right = v_bar + 0.5 * d_wheel * phi_dot;
+
+            wheel_out[idx++] = v_left  / r_wheel;
+            wheel_out[idx++] = v_right / r_wheel;
+        }
+    }
+
+};
+
+
+// ===============================
+// Example usage
+// ===============================
+int main() {
+    MultiTurretController ctrl;
+
+    double vx = 0.5;
+    double vy = 0.0;
+    double omega = 0.2;
+
+    double turret_angles[4] = {0, 0, 0, 0};
+
+    double wheels[8];
+
+    double t = 0.0;
+
+    ctrl.compute(vx, vy, omega, turret_angles, wheels, t);
+
+    cout << "Wheel outputs:" << endl;
+    for (int i = 0; i < 8; i++)
+        cout << "  wheel[" << i << "] = " << wheels[i] << endl;
+
+    return 0;
+}
+
+
+// FOr real robot 
+
+// int main() {
+
+//     MultiTurretController ctrl;
+
+//     double turret_angles[4] = {0,0,0,0};
+//     double wheels[8];
+
+//     while (true) {
+
+//         // 1. Read actual turret angles from encoders (feedback)
+//         turret_angles[0] = readEncoderLF();
+//         turret_angles[1] = readEncoderLR();
+//         turret_angles[2] = readEncoderRR();
+//         turret_angles[3] = readEncoderRF();
+
+//         // 2. Read desired command (input)
+//         double vx     = getCommandX();
+//         double vy     = getCommandY();
+//         double omega  = getCommandOmega();
+
+//         // 3. Compute wheel outputs
+//         double now = current_time_seconds();
+//         ctrl.compute(vx, vy, omega, turret_angles, wheels, now);
+
+//         // 4. Send wheel outputs to the motors
+//         sendToMotor(0, wheels[0]);
+//         sendToMotor(1, wheels[1]);
+//         sendToMotor(2, wheels[2]);
+//         sendToMotor(3, wheels[3]);
+//         sendToMotor(4, wheels[4]);
+//         sendToMotor(5, wheels[5]);
+//         sendToMotor(6, wheels[6]);
+//         sendToMotor(7, wheels[7]);
+
+//         // 5. Wait for next cycle
+//         sleep_ms(10);   // 100 Hz loop
+//     }
+
+//     return 0;
+// }
+

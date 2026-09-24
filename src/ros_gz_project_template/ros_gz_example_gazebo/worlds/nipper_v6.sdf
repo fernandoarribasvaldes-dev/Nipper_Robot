@@ -1,0 +1,357 @@
+<?xml version="1.0" ?>
+<!--
+  Try sending commands:
+    gz topic -t "/model/diff_drive/cmd_vel" -m gz.msgs.Twist -p "linear: {x: 1.0}, angular: {z: -0.1}"
+    ros2 topic pub /diff_drive/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 5.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: -0.1}}"
+  Listen to odometry:
+    gz topic -e -t /model/diff_drive/odometry
+    ros2 topic echo /model/diff_drive/odometry
+-->
+<sdf version="1.8">
+  <world name="demo">
+    <plugin
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics">
+    </plugin>
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+    <plugin
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin
+      filename="BasicSystem"
+      name="ros_gz_example_gazebo::BasicSystem">
+    </plugin>
+    <plugin
+      filename="FullSystem"
+      name="ros_gz_example_gazebo::FullSystem">
+    </plugin>
+
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>0.5</mu>         <!-- friction coefficient in first direction -->
+                <mu2>0.5</mu2>       <!-- friction coefficient in second direction -->
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="diff_drive">
+    <!-- <model name="nipper"> -->
+      <self_collide>true</self_collide>
+      <pose>0.0 0 0.35 0 0 0</pose>
+      <include merge="true">
+        <uri>package://ros_gz_example_description/models/nipper/Nipper_v6.sdf</uri>
+      </include>
+
+      <plugin
+        filename="gz-sim-joint-state-publisher-system"
+        name="gz::sim::systems::JointStatePublisher">
+      </plugin>
+
+      <!-- <plugin
+        filename="gz-sim-pose-publisher-system"
+        name="gz::sim::systems::PosePublisher">
+        <publish_link_pose>true</publish_link_pose>
+        <use_pose_vector_msg>true</use_pose_vector_msg>
+        <static_publisher>true</static_publisher>
+        <static_update_frequency>1</static_update_frequency>
+      </plugin> -->
+
+      <plugin
+        filename="gz-sim-odometry-publisher-system"
+        name="gz::sim::systems::OdometryPublisher">
+        <odom_frame>odom</odom_frame>
+        <robot_base_frame>base_footprint</robot_base_frame>
+      </plugin>
+    </model>
+
+
+    <include>
+      <uri>
+      https://fuel.gazebosim.org/1.0/MovAi/models/pallet_box_mobile
+      </uri>
+      <pose>-3.26 0.10 -0.01 0 0 0</pose>
+    </include>
+
+
+   
+
+    <!-- <include>
+    <uri>
+    https://fuel.gazebosim.org/1.0/OpenRobotics/models/Depot
+    </uri>
+    </include> -->
+    
+    <!-- <include>
+      <uri>file:///home/sarthakshirke/nipper_simulation/src/ros_gz_project_template/ros_gz_example_description/models/nipperv5/nipper_ellen_test_lidar.sdf</uri>
+      <name>nipper_robot</name>
+      
+    </include> -->
+
+
+    <!-- <include>
+      <uri>file:///home/sarthakshirke/nipper_simulation/src/ros_gz_project_template/ros_gz_example_description/models/nipperv5/nipper_ellen.sdf</uri>
+      <name>nipper_robot</name>
+      <pose>0.0 0 0.35 0 0 0</pose>
+    </include> -->
+
+
+    <!-- <include>
+      <uri>file:///home/sarthakshirke/nipper_simulation/src/ros_gz_project_template/ros_gz_example_description/models/nipperv5/wheelset_try.sdf</uri>
+    
+      <pose>0.9 0 0.35 0 0 0</pose>
+    </include> -->
+
+
+    <!-- <include>
+      <uri>file:///home/sarthakshirke/nipper_simulation/src/ros_gz_project_template/ros_gz_example_description/models/nipperv5/nipper_wheel.sdf</uri>
+      <name>nipper_wheel</name>
+      
+      <pose>-1 0 0.07 0 0 1.5708</pose> 
+    </include> -->
+
+    <!-- Joint connecting robot and wheel -->
+    <!-- <joint name="robot_to_wheel_joint" type="revolute">
+      <parent>nipper_robot::5017066</parent>   
+      <child>nipper_wheel::5016048</child>    
+      <pose>-1 0 0.07 0 0 1.5708</pose>
+      <axis>
+        <xyz>0 0 1</xyz> 
+        <limit>
+          <lower>-2</lower>   
+          <upper>2</upper>
+        </limit>
+      </axis>
+    </joint> -->
+
+    <!-- <plugin name="joint_controller" filename="gz-sim-joint-controller-system">
+      <joint_name>robot_to_wheel_joint</joint_name>
+    </plugin> -->
+
+    <model name='wall_1'>
+      <static>true</static>
+      <pose>0 9.5 0 0 0 1.57</pose><!--pose relative to the world-->
+      <link name='box'>
+          <pose/>
+          <visual name='visual'>
+              <geometry>
+                  <box>
+                      <size>1 20.0 4.0</size>
+                  </box>
+              </geometry>
+              <!--let's add color to our link-->
+              <material>
+                  <ambient>0.8 0.5 0.3 1</ambient>    <!-- Light brown ambient color -->
+                  <diffuse>0.8 0.5 0.3 1</diffuse>    <!-- Light brown diffuse color -->
+                  <specular>0.5 0.3 0.2 1</specular>  <!-- Lighter brown specular color -->
+              </material>
+          </visual>
+          <collision name='collision'>
+              <geometry>
+                  <box>
+                      <size>1 20.0 4.0</size>
+                  </box>
+              </geometry>
+          </collision>
+
+          <sensor name='sensor_contact' type='contact'>
+              <contact>
+                  <collision>collision</collision>
+              </contact>
+          </sensor>
+      </link>
+
+      <plugin filename="libignition-gazebo-touchplugin-system.so"
+          name="ignition::gazebo::systems::TouchPlugin">
+          <target>nipper</target>
+          <namespace>wall</namespace>
+          <time>0.001</time>
+          <enabled>true</enabled>
+      </plugin>
+
+  </model>
+
+
+
+  <model name='wall_2'>
+      <static>true</static>
+      <pose>0 -9.5 0 0 0 1.57</pose><!--pose relative to the world-->
+      <link name='box'>
+          <pose/>
+          <visual name='visual'>
+              <geometry>
+                  <box>
+                      <size>1 20.0 4.0</size>
+                  </box>
+              </geometry>
+              <!--let's add color to our link-->
+              <material>
+                  <ambient>0.8 0.5 0.3 1</ambient>    <!-- Light brown ambient color -->
+                  <diffuse>0.8 0.5 0.3 1</diffuse>    <!-- Light brown diffuse color -->
+                  <specular>0.5 0.3 0.2 1</specular>  <!-- Lighter brown specular color -->
+              </material>
+          </visual>
+          <collision name='collision'>
+              <geometry>
+                  <box>
+                      <size>1 20.0 4.0</size>
+                  </box>
+              </geometry>
+          </collision>
+
+          <sensor name='sensor_contact' type='contact'>
+              <contact>
+                  <collision>collision</collision>
+              </contact>
+          </sensor>
+      </link>
+
+      <plugin filename="libignition-gazebo-touchplugin-system.so"
+          name="ignition::gazebo::systems::TouchPlugin">
+          <target>nipper</target>
+          <namespace>wall</namespace>
+          <time>0.001</time>
+          <enabled>true</enabled>
+      </plugin>
+
+  </model>
+
+
+   <model name='wall_3'>
+      <static>true</static>
+      <pose>9.5 0 0 0 0 0</pose><!--pose relative to the world-->
+      <link name='box'>
+          <pose/>
+          <visual name='visual'>
+              <geometry>
+                  <box>
+                      <size>1 18.0 4.0</size>
+                  </box>
+              </geometry>
+              <!--let's add color to our link-->
+              <material>
+                  <ambient>0.8 0.5 0.3 1</ambient>    <!-- Light brown ambient color -->
+                  <diffuse>0.8 0.5 0.3 1</diffuse>    <!-- Light brown diffuse color -->
+                  <specular>0.5 0.3 0.2 1</specular>  <!-- Lighter brown specular color -->
+              </material>
+          </visual>
+          <collision name='collision'>
+              <geometry>
+                  <box>
+                      <size>1 18.0 2.0</size>
+                  </box>
+              </geometry>
+          </collision>
+
+          <sensor name='sensor_contact' type='contact'>
+              <contact>
+                  <collision>collision</collision>
+              </contact>
+          </sensor>
+      </link>
+
+      <plugin filename="libignition-gazebo-touchplugin-system.so"
+          name="ignition::gazebo::systems::TouchPlugin">
+          <target>nipper</target>
+          <namespace>wall</namespace>
+          <time>0.001</time>
+          <enabled>true</enabled>
+      </plugin>
+
+  </model>
+
+
+  <model name='wall_4'>
+      <static>true</static>
+      <pose>-9.5 0 0 0 0 0</pose><!--pose relative to the world-->
+      <link name='box'>
+          <pose/>
+          <visual name='visual'>
+              <geometry>
+                  <box>
+                      <size>1 18.0 4.0</size>
+                  </box>
+              </geometry>
+              <!--let's add color to our link-->
+              <material>
+                  <ambient>0.8 0.5 0.3 1</ambient>    <!-- Light brown ambient color -->
+                  <diffuse>0.8 0.5 0.3 1</diffuse>    <!-- Light brown diffuse color -->
+                  <specular>0.5 0.3 0.2 1</specular>  <!-- Lighter brown specular color -->
+              </material>
+          </visual>
+          <collision name='collision'>
+              <geometry>
+                  <box>
+                      <size>1 18.0 4.0</size>
+                  </box>
+              </geometry>
+          </collision>
+
+          <sensor name='sensor_contact' type='contact'>
+              <contact>
+                  <collision>collision</collision>
+              </contact>
+          </sensor>
+      </link>
+
+      <plugin filename="libignition-gazebo-touchplugin-system.so"
+          name="ignition::gazebo::systems::TouchPlugin">
+          <target>nipper</target>
+          <namespace>wall</namespace>
+          <time>0.001</time>
+          <enabled>true</enabled>
+      </plugin>
+
+  </model>
+
+  </world>
+</sdf>

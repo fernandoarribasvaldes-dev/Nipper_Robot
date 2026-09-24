@@ -1,0 +1,40 @@
+<sdf version='1.11'>
+  <model name='nipper_sarthak_gazebo_axis_correction'>
+    <link name='base_link'>
+      <inertial>
+        <pose>0.079628000000000004 0.40333999999999998 1.2708999999999999 0 0 0</pose>
+        <mass>476.25</mass>
+        <inertia>
+          <ixx>93.079999999999998</ixx>
+          <ixy>13.525</ixy>
+          <ixz>-0.12695999999999999</ixz>
+          <iyy>72.900999999999996</iyy>
+          <iyz>0.20512</iyz>
+          <izz>108.83</izz>
+        </inertia>
+      </inertial>
+      <collision name='base_link_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://nipper_sarthak_gazebo_axis_correction/meshes/base_link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='base_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://nipper_sarthak_gazebo_axis_correction/meshes/base_link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.990199983 1 1 1</diffuse>
+          <ambient>0.990199983 1 1 1</ambient>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

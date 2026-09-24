@@ -1,0 +1,737 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+    <model name='nipper'>
+
+      <!-- base_link just a rectangle -->
+      <!-- <mass>200</mass>   -->
+      
+      <link name='base_link'>
+      <pose>-1.15 0.05 -0.10 0 -0 0</pose>
+      <inertial>
+          <mass>305</mass>
+          <inertia>
+            <ixx>3.82</ixx>
+            <iyy>6.73</iyy>
+            <izz>10.42</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <visual name='visual_base_link'>
+          <geometry>
+            <box>
+              <size>1.5 0.6 0.1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.5 0.5 1.0 1</ambient>
+            <diffuse>0.5 0.5 1.0 1</diffuse>
+            <specular>0.0 0.0 1.0 1</specular>
+          </material>
+        </visual>
+        <!-- <visual name='base_link_visual'>
+        <pose>0.7 -1.25 -0.06 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>file:///home/sarthakshirke/nipper_simulation/src/ros_gz_project_template/ros_gz_example_description/models/nipper/nipper_sarthak_gazebo/nipper_sarthak_gazebo/meshes/base_link.STL</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <diffuse>0.990196109 1 1 1</diffuse>
+            <ambient>0.990196109 1 1 1</ambient>
+          </material>
+        </visual> -->
+        <collision name='collision_base_link'>
+          <geometry>
+            <box>
+              <size>1.5 0.6 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+      
+      </link>
+
+      <!-- WheelSet Right of Nipper Robot -->
+
+      <link name='wheelset_right'>
+        <pose>-0.45 -0.15 -0.25 0 -0 0</pose>
+        <inertial>
+          <mass>4.8</mass>
+          <inertia>
+            <ixx>0.126164</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.416519</iyy>
+            <iyz>0</iyz>
+            <izz>0.481014</izz>
+          </inertia>
+        </inertial>
+        <visual name='wheelset_right_visual_base_link'>
+          <geometry>
+            <box>
+              <size>0.2 0.15 0.05</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.5 0.5 1.0 1</ambient>
+            <diffuse>0.5 0.5 1.0 1</diffuse>
+            <specular>0.0 0.0 1.0 1</specular>
+          </material>
+        </visual>
+        <collision name='wheelset_right_collision_base_link'>
+          <geometry>
+            <box>
+              <size>0.2 0.15 0.05</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+
+
+      <link name='wheelset_right_left_wheel'>
+        <pose>-0.45 -0.075 -0.25 -1.5707 0 0</pose>
+        <inertial>
+          <mass>0.2</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+        </inertial>
+        <visual name='wheelset_right_visual_left_wheel'>
+          <geometry>
+            <cylinder> 
+            <!-- <radius>0.07</radius>  -->
+            <radius>0.035</radius>
+            <length>0.03</length> 
+            </cylinder> 
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+            <diffuse>0.2 0.2 0.2 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+          </material>
+        </visual>
+        <collision name='wheelset_right_collision_left_wheel'>
+          <geometry>
+            <sphere>
+              <!-- <radius>0.07</radius> -->
+              <radius>0.035</radius>
+            </sphere>
+          </geometry>
+        </collision>
+      </link>
+
+      <link name='wheelset_right_right_wheel'>
+        <pose>-0.45 -0.225 -0.25 -1.5707 0 0</pose>
+        <inertial>
+          <mass>0.2</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+        </inertial>
+        <visual name='wheelset_right_visual_right_wheel'>
+          <geometry>
+            <cylinder> 
+            <!-- <radius>0.07</radius>  -->
+            <radius>0.035</radius>
+            <length>0.03</length> 
+            </cylinder> 
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+            <diffuse>0.2 0.2 0.2 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+          </material>
+        </visual>
+        <collision name='wheelset_right_collision_right_wheel'>
+          <geometry>
+            <sphere>
+              <!-- <radius>0.07</radius> -->
+              <radius>0.035</radius>
+            </sphere>
+          </geometry>
+        </collision>
+      </link>
+
+      <joint name='wheelset_right_left_wheel_joint' type='revolute'>
+        <parent>wheelset_right</parent>
+        <child>wheelset_right_left_wheel</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.79769e+308</lower>
+            <upper>1.79769e+308</upper>
+          </limit>
+        </axis>
+      </joint>
+
+      <joint name='wheelset_right_right_wheel_joint' type='revolute'>
+        <parent>wheelset_right</parent>
+        <child>wheelset_right_right_wheel</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.79769e+308</lower>
+            <upper>1.79769e+308</upper>
+          </limit>
+        </axis>
+      </joint>
+
+
+      <!-- Joint controller plugin -->
+      <plugin name="gz::sim::systems::JointController" filename="gz-sim-joint-controller-system">
+        <joint_name>wheelset_right_left_wheel_joint</joint_name>
+        <!-- <p_gain>10</p_gain>
+        <i_gain>1</i_gain>
+        <d_gain>1</d_gain> -->
+      </plugin>
+
+      <plugin name="gz::sim::systems::JointController" filename="gz-sim-joint-controller-system">
+        <joint_name>wheelset_right_right_wheel_joint</joint_name>
+        <!-- <p_gain>10</p_gain>
+        <i_gain>1</i_gain>
+        <d_gain>1</d_gain> -->
+      </plugin>
+
+      <!-- <plugin
+        filename="ignition-gazebo-diff-drive-system"
+        name="ignition::gazebo::systems::DiffDrive">
+        <left_joint>wheelset_right_left_wheel_joint</left_joint>
+        <right_joint>wheelset_right_right_wheel_joint</right_joint>
+        <wheel_separation>0.15</wheel_separation>
+        <wheel_radius>0.07</wheel_radius>
+        <odom_publish_frequency>1</odom_publish_frequency>
+        <max_linear_acceleration>1</max_linear_acceleration>
+        <min_linear_acceleration>-1</min_linear_acceleration>
+        <max_angular_acceleration>2</max_angular_acceleration>
+        <min_angular_acceleration>-2</min_angular_acceleration>
+        <max_linear_velocity>0.5</max_linear_velocity>
+        <min_linear_velocity>-0.5</min_linear_velocity>
+        <max_angular_velocity>1</max_angular_velocity>
+        <min_angular_velocity>-1</min_angular_velocity>
+        <topic>wheelset_right/cmd_vel</topic>
+        <odom_topic>wheelset_right/odom</odom_topic>
+      </plugin> -->
+
+
+      <!-- The middle wheelset in Nipper V6 -->
+
+      <link name='wheelset_rear_right'>
+        <pose>-1.85 0.05 -0.25 0 -0 0</pose>
+        <inertial>
+          <mass>4.8</mass>
+          <inertia>
+            <ixx>0.126164</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.416519</iyy>
+            <iyz>0</iyz>
+            <izz>0.481014</izz>
+          </inertia>
+        </inertial>
+        <visual name='wheelset_rear_right_visual_base_link'>
+          <geometry>
+            <box>
+              <size>0.2 0.15 0.05</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.5 0.5 1.0 1</ambient>
+            <diffuse>0.5 0.5 1.0 1</diffuse>
+            <specular>0.0 0.0 1.0 1</specular>
+          </material>
+        </visual>
+        <collision name='wheelset_rear_right_collision_base_link'>
+          <geometry>
+            <box>
+              <size>0.2 0.15 0.05</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+
+
+      <link name='wheelset_rear_right_left_wheel'>
+        <pose>-1.85 -0.025 -0.25 -1.5707 0 0</pose>
+        <inertial>
+          <mass>0.2</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+        </inertial>
+        <visual name='wheelset_rear_right_visual_left_wheel'>
+          <geometry>
+            <cylinder> 
+            <!-- <radius>0.07</radius>  -->
+            <radius>0.035</radius>
+            <length>0.03</length> 
+            </cylinder> 
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+            <diffuse>0.2 0.2 0.2 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+          </material>
+        </visual>
+        <collision name='wheelset_rear_right_collision_left_wheel'>
+          <geometry>
+            <sphere>
+              <!-- <radius>0.07</radius> -->
+              <radius>0.035</radius>
+            </sphere>
+          </geometry>
+        </collision>
+      </link>
+
+      <link name='wheelset_rear_right_right_wheel'>
+        <pose>-1.85 0.125 -0.25 -1.5707 0 0</pose>
+        <inertial>
+          <mass>0.2</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+        </inertial>
+        <visual name='wheelset_rear_right_visual_right_wheel'>
+          <geometry>
+            <cylinder> 
+            <!-- <radius>0.07</radius>  -->
+            <radius>0.035</radius>
+            <length>0.03</length> 
+            </cylinder> 
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+            <diffuse>0.2 0.2 0.2 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+          </material>
+        </visual>
+        <collision name='wheelset_rear_right_collision_right_wheel'>
+          <geometry>
+            <sphere>
+              <!-- <radius>0.07</radius> -->
+              <radius>0.035</radius>
+            </sphere>
+          </geometry>
+        </collision>
+      </link>
+
+      <joint name='wheelset_rear_right_left_wheel_joint' type='revolute'>
+        <parent>wheelset_rear_right</parent>
+        <child>wheelset_rear_right_left_wheel</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.79769e+308</lower>
+            <upper>1.79769e+308</upper>
+          </limit>
+        </axis>
+      </joint>
+
+      <joint name='wheelset_rear_right_right_wheel_joint' type='revolute'>
+        <parent>wheelset_rear_right</parent>
+        <child>wheelset_rear_right_right_wheel</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.79769e+308</lower>
+            <upper>1.79769e+308</upper>
+          </limit>
+        </axis>
+      </joint>
+
+      <!-- Joint controller plugin -->
+      <plugin name="gz::sim::systems::JointController" filename="gz-sim-joint-controller-system">
+        <joint_name>wheelset_rear_right_left_wheel_joint</joint_name>
+        <!-- <p_gain>10</p_gain>
+        <i_gain>1</i_gain>
+        <d_gain>1</d_gain> -->
+      </plugin>
+
+      <plugin name="gz::sim::systems::JointController" filename="gz-sim-joint-controller-system">
+        <joint_name>wheelset_rear_right_right_wheel_joint</joint_name>
+        <!-- <p_gain>10</p_gain>
+        <i_gain>1</i_gain>
+        <d_gain>1</d_gain> -->
+      </plugin>
+
+      <!-- <plugin
+        filename="ignition-gazebo-diff-drive-system"
+        name="ignition::gazebo::systems::DiffDrive">
+        <left_joint>wheelset_rear_right_left_wheel_joint</left_joint>
+        <right_joint>wheelset_rear_right_right_wheel_joint</right_joint>
+        <wheel_separation>0.15</wheel_separation>
+        <wheel_radius>0.07</wheel_radius>
+        <odom_publish_frequency>1</odom_publish_frequency>
+        <max_linear_acceleration>1</max_linear_acceleration>
+        <min_linear_acceleration>-1</min_linear_acceleration>
+        <max_angular_acceleration>2</max_angular_acceleration>
+        <min_angular_acceleration>-2</min_angular_acceleration>
+        <max_linear_velocity>0.5</max_linear_velocity>
+        <min_linear_velocity>-0.5</min_linear_velocity>
+        <max_angular_velocity>1</max_angular_velocity>
+        <min_angular_velocity>-1</min_angular_velocity>
+        <topic>wheelset_rear_right/cmd_vel</topic>
+        <odom_topic>wheelset_rear_right/odom</odom_topic>
+      </plugin> -->
+
+
+      <!-- WheelSet left of Nipper Robot -->
+
+      <link name='wheelset_left'>
+        <pose>-0.45 0.25 -0.25 0 -0 0</pose>
+        <inertial>
+          <mass>4.8</mass>
+          <inertia>
+            <ixx>0.126164</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.416519</iyy>
+            <iyz>0</iyz>
+            <izz>0.481014</izz>
+          </inertia>
+        </inertial>
+        <visual name='wheelset_left_visual_base_link'>
+          <geometry>
+            <box>
+              <size>0.2 0.15 0.05</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.5 0.5 1.0 1</ambient>
+            <diffuse>0.5 0.5 1.0 1</diffuse>
+            <specular>0.0 0.0 1.0 1</specular>
+          </material>
+        </visual>
+        <collision name='wheelset_left_collision_base_link'>
+          <geometry>
+            <box>
+              <size>0.2 0.15 0.05</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+
+
+      <link name='wheelset_left_left_wheel'>
+        <pose>-0.45 0.325 -0.25 -1.5707 0 0</pose>
+        <inertial>
+          <mass>0.2</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+        </inertial>
+        <visual name='wheelset_left_visual_left_wheel'>
+          <geometry>
+            <cylinder> 
+            <!-- <radius>0.07</radius>  -->
+            <radius>0.035</radius>
+            <length>0.03</length> 
+            </cylinder> 
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+            <diffuse>0.2 0.2 0.2 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+          </material>
+        </visual>
+        <collision name='wheelset_left_collision_left_wheel'>
+          <geometry>
+            <sphere>
+              <!-- <radius>0.07</radius> -->
+              <radius>0.035</radius>
+            </sphere>
+          </geometry>
+        </collision>
+      </link>
+
+      <link name='wheelset_left_right_wheel'>
+        <pose>-0.45 0.175 -0.25 -1.5707 0 0</pose>
+        <inertial>
+          <mass>0.2</mass>
+          <inertia>
+            <ixx>0.145833</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.145833</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+        </inertial>
+        <visual name='wheelset_left_visual_right_wheel'>
+          <geometry>
+            <cylinder> 
+            <!-- <radius>0.07</radius> -->
+            <radius>0.035</radius>
+            <length>0.03</length> 
+            </cylinder> 
+          </geometry>
+          <material>
+            <ambient>0.2 0.2 0.2 1</ambient>
+            <diffuse>0.2 0.2 0.2 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+          </material>
+        </visual>
+        <collision name='wheelset_left_collision_right_wheel'>
+          <geometry>
+            <sphere>
+              <!-- <radius>0.07</radius> -->
+              <radius>0.035</radius>
+            </sphere>
+          </geometry>
+        </collision>
+      </link>
+
+      <joint name='wheelset_left_left_wheel_joint' type='revolute'>
+        <parent>wheelset_left</parent>
+        <child>wheelset_left_left_wheel</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.79769e+308</lower>
+            <upper>1.79769e+308</upper>
+          </limit>
+        </axis>
+      </joint>
+
+      <joint name='wheelset_left_right_wheel_joint' type='revolute'>
+        <parent>wheelset_left</parent>
+        <child>wheelset_left_right_wheel</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.79769e+308</lower>
+            <upper>1.79769e+308</upper>
+          </limit>
+        </axis>
+      </joint>
+
+      <!-- Joint controller plugin -->
+      <plugin name="gz::sim::systems::JointController" filename="gz-sim-joint-controller-system">
+        <joint_name>wheelset_left_left_wheel_joint</joint_name>
+        <!-- <p_gain>10</p_gain>
+        <i_gain>1</i_gain>
+        <d_gain>1</d_gain> -->
+      </plugin>
+
+      <plugin name="gz::sim::systems::JointController" filename="gz-sim-joint-controller-system">
+        <joint_name>wheelset_left_right_wheel_joint</joint_name>
+        <!-- <p_gain>10</p_gain>
+        <i_gain>1</i_gain>
+        <d_gain>1</d_gain> -->
+      </plugin>
+
+      
+
+    <!-- Encoder values simulation
+          <damping>40</damping>  
+          <friction>0.6</friction>
+     -->
+
+    <!-- Encoder values practical
+          <damping>150</damping>  
+          <friction>0.6</friction>
+
+     -->
+
+    <!-- RIGHT -->
+    <joint name="wheelset_right_revolute_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>wheelset_right</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-2.007</lower>
+          <upper>2.007</upper>
+        </limit>
+        <dynamics>
+          <damping>50</damping>  
+          <friction>0.6</friction>
+        </dynamics>
+      </axis>
+    </joint>
+
+
+    <!-- REAR RIGHT -->
+    <joint name="wheelset_rear_right_revolute_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>wheelset_rear_right</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-2.007</lower>
+          <upper>2.007</upper>
+        </limit>
+        <dynamics>
+          <damping>50</damping>  
+          <friction>0.6</friction>
+        </dynamics>
+      </axis>
+    </joint>
+
+    <!-- FRONT LEFT --> 
+    <joint name="wheelset_left_revolute_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>wheelset_left</child>
+      
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-2.007</lower>
+          <upper>2.007</upper>
+        </limit>
+        <dynamics>
+          <damping>50</damping>  
+          <friction>0.6</friction>
+        </dynamics>
+      </axis>
+    </joint>
+
+    
+    <link name="diff_drive/lidar_link">
+        <pose>-0.65 0.05 1 0 0 0</pose>
+        <inertial>
+          <mass>0.1</mass>
+          <inertia>
+            <ixx>0.000166667</ixx>
+            <iyy>0.000166667</iyy>
+            <izz>0.000166667</izz>
+          </inertia>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </visual>
+        <sensor name='gpu_lidar' type='gpu_lidar'>
+          <pose>0 0 0 0 0 0</pose>
+          <topic>scan</topic>
+           <gz_frame_id>diff_drive/lidar_link</gz_frame_id>
+          <update_rate>10</update_rate>
+          <lidar>
+            <scan>
+              <horizontal>
+                <samples>640</samples>
+                <resolution>1</resolution>
+                <min_angle>-3.14159</min_angle> 
+                <max_angle>3.14159</max_angle> 
+              </horizontal>
+              <vertical>
+                <samples>1</samples>
+                <resolution>1</resolution>
+                <min_angle>0.0</min_angle>
+                <max_angle>0.0</max_angle>
+              </vertical>
+            </scan>
+            <range>
+              <min>0.08</min>
+              <max>10.0</max>
+              <resolution>0.01</resolution>
+            </range>
+          </lidar>
+          <visualize>true</visualize>
+        </sensor>
+    </link>
+
+    <joint name='lidar_joint_loc' type='fixed'>
+        <parent>base_link</parent>
+        <child>diff_drive/lidar_link</child>
+    </joint>
+
+
+
+    <!-- <link name="diff_drive/lidar_link_1">
+        <pose>-1.9 -0.15 -0.19 0 0 0</pose>
+        <inertial>
+          <mass>0.1</mass>
+          <inertia>
+            <ixx>0.000166667</ixx>
+            <iyy>0.000166667</iyy>
+            <izz>0.000166667</izz>
+          </inertia>
+        </inertial>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.05 0.05 0.05</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.05 0.05 0.05</size>
+            </box>
+          </geometry>
+        </visual>
+        <sensor name='gpu_lidar' type='gpu_lidar'>
+          <pose>0 0 0 0 0 0</pose>
+          <topic>scan_rear</topic>
+           <gz_frame_id>diff_drive/lidar_link</gz_frame_id>
+          <update_rate>10</update_rate>
+          <lidar>
+            <scan>
+              <horizontal>
+                <samples>640</samples>
+                <resolution>1</resolution>
+                <min_angle>1.5708</min_angle>   
+                <max_angle>4.7124</max_angle>   
+              </horizontal>
+              <vertical>
+                <samples>1</samples>
+                <resolution>1</resolution>
+                <min_angle>0.0</min_angle>
+                <max_angle>0.0</max_angle>
+              </vertical>
+            </scan>
+            <range>
+              <min>0.08</min>
+              <max>10.0</max>
+              <resolution>0.01</resolution>
+            </range>
+          </lidar>
+          <visualize>true</visualize>
+        </sensor>
+    </link>
+
+    <joint name='lidar_joint_rear' type='fixed'>
+        <parent>base_link</parent>
+        <child>diff_drive/lidar_link_1</child>
+    </joint> -->
+
+    </model>
+</sdf>
